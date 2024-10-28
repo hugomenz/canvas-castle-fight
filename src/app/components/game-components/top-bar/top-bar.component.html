@@ -1,0 +1,9 @@
+<div class="top-bar">
+  @if(resources$ | async; as resources){
+  <div class="resource">🌳 Madera: {{ resources.wood }}</div>
+  <div class="resource">🍗 Comida: {{ resources.food }}</div>
+  <div class="resource">💰 Oro: {{ resources.gold }}</div>
+  <div class="resource">🌟 Recurso: {{ resources.upgrade }}</div>
+  <div class="stats">🏆 Victorias: 1 | ❌ Derrotas: 0</div>
+  }
+</div>

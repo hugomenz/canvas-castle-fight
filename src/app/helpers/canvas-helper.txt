@@ -1,0 +1,233 @@
+import { ElementRef } from '@angular/core';
+import { GameConstants } from './game-constants';
+import { BuildingLocation } from '../core/models/game.models';
+
+export abstract class CanvasHelper {
+  // Colors for different elements
+  static colors = {
+    empty: 'white',
+    gridLine: '#cccccc',
+    player1Zone: 'rgba(255, 230, 230, 0.5)',
+    player1ZoneHighlight: 'rgba(255, 0, 0, 0.3)',
+    player2Zone: 'rgba(230, 230, 255, 0.5)',
+    unoccupiedPlayerArea: '#cccccc',
+    archerRange: 'green',
+    stable: 'red',
+    barracks: 'blue',
+    castle: 'yellow',
+    tower: 'gray',
+    hoverValid: 'rgba(0, 255, 0, 0.5)',
+    hoverInvalid: 'rgba(255, 0, 0, 0.5)',
+    dividingLine: 'darkgreen',
+  };
+
+  // Configuration constants
+  static readonly CASTLE_SIZE = { width: 5, height: 5 };
+  static readonly TOWER_SIZE = { width: 2, height: 2 };
+
+  // Draw the grid lines
+  static drawGrid(
+    ctx: CanvasRenderingContext2D,
+    canvasWidth: number,
+    canvasHeight: number,
+    cellSize: number
+  ) {
+    ctx.strokeStyle = this.colors.gridLine;
+    ctx.lineWidth = 0.5;
+
+    // Draw vertical lines
+    for (let x = 0; x <= canvasWidth; x += cellSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvasHeight);
+      ctx.stroke();
+    }
+
+    // Draw horizontal lines
+    for (let y = 0; y <= canvasHeight; y += cellSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvasWidth, y);
+      ctx.stroke();
+    }
+  }
+
+  // Draw player zones
+  static drawZones(
+    ctx: CanvasRenderingContext2D,
+    cellSize: number,
+    canvasHeight: number,
+    playerZoneColumns: number,
+    gridCols: number
+  ) {
+    // Player 1 zone
+    ctx.fillStyle = this.colors.player1Zone;
+    ctx.fillRect(0, 0, playerZoneColumns * cellSize, canvasHeight);
+
+    // Player 2 zone
+    ctx.fillStyle = this.colors.player2Zone;
+    ctx.fillRect(
+      (gridCols - playerZoneColumns) * cellSize,
+      0,
+      playerZoneColumns * cellSize,
+      canvasHeight
+    );
+  }
+
+  // Draw dividing lines or forest in the middle
+  static drawDividingLines(
+    ctx: CanvasRenderingContext2D,
+    cellSize: number,
+    gridRows: number,
+    gridCols: number
+  ) {
+    const middleRow = Math.floor(gridRows / 2);
+
+    ctx.fillStyle = this.colors.dividingLine;
+
+    // Define the forest dimensions
+    const forestHeight = 3; // Height in cells
+    const forestStartCol = Math.floor(gridCols * 0.2);
+    const forestEndCol = Math.floor(gridCols * 0.8);
+
+    // Draw the forest rectangle
+    ctx.fillRect(
+      forestStartCol * cellSize,
+      middleRow * cellSize,
+      (forestEndCol - forestStartCol) * cellSize,
+      forestHeight * cellSize
+    );
+  }
+
+  // Draw buildings
+  static drawBuildings(
+    ctx: CanvasRenderingContext2D,
+    buildings: { row: number; col: number; type: string }[],
+    cellSize: number
+  ) {
+    buildings.forEach((building) => {
+      this.drawBuilding(ctx, building, cellSize);
+    });
+  }
+
+  // Draw a single building
+  static drawBuilding(
+    ctx: CanvasRenderingContext2D,
+    building: { row: number; col: number; type: string },
+    cellSize: number
+  ) {
+    const color = this.getBuildingColor(building.type);
+    const size = this.getBuildingSize(building.type);
+
+    ctx.fillStyle = color;
+    ctx.fillRect(
+      building.col * cellSize,
+      building.row * cellSize,
+      size.width * cellSize,
+      size.height * cellSize
+    );
+  }
+
+  // Get the size of a building type
+  static getBuildingSize(type: string): { width: number; height: number } {
+    switch (type) {
+      case 'castle':
+        return CanvasHelper.CASTLE_SIZE;
+      case 'tower':
+        return CanvasHelper.TOWER_SIZE;
+      case 'Arquería':
+      case 'Establo':
+      case 'Cuartel':
+        return { width: 3, height: 3 }; // Assuming these buildings are 3x3
+      default:
+        return { width: 1, height: 1 }; // Default size
+    }
+  }
+
+  // Get the color associated with a building type
+  static getBuildingColor(building: string): string {
+    switch (building) {
+      case 'Arquería':
+        return this.colors.archerRange;
+      case 'Establo':
+        return this.colors.stable;
+      case 'Cuartel':
+        return this.colors.barracks;
+      case 'castle':
+        return this.colors.castle;
+      case 'tower':
+        return this.colors.tower;
+      default:
+        return this.colors.empty;
+    }
+  }
+
+  static getCanvasElements(canvasRef: ElementRef<HTMLCanvasElement>): {
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+  } | null {
+    const canvas = canvasRef?.nativeElement;
+    if (!canvas) return null;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    return { canvas, ctx };
+  }
+
+  // Determine if a cell is within player 1's area
+  static isPlayer1Area(row: number, col: number): boolean {
+    return col >= 0 && col < GameConstants.PLAYER_ZONE_MAX_COL;
+  }
+
+  // Check if a cell is occupied by any building
+  static isCellOccupied(
+    row: number,
+    col: number,
+    buildings: BuildingLocation[]
+  ): boolean {
+    return buildings.some((building) => {
+      const size = CanvasHelper.getBuildingSize(building.type);
+      return (
+        row >= building.row &&
+        row < building.row + size.height &&
+        col >= building.col &&
+        col < building.col + size.width
+      );
+    });
+  }
+
+  // Determine if placement is valid
+  static isValidPlacement(
+    row: number,
+    col: number,
+    size: { width: number; height: number },
+    buildings: BuildingLocation[]
+  ): boolean {
+    // Check boundaries
+    if (
+      row < 0 ||
+      col < 0 ||
+      row + size.height > GameConstants.GRID_ROWS ||
+      col + size.width > GameConstants.GRID_COLS
+    ) {
+      return false;
+    }
+
+    // Check if the area is within player 1's zone
+    for (let i = row; i < row + size.height; i++) {
+      for (let j = col; j < col + size.width; j++) {
+        if (!CanvasHelper.isPlayer1Area(i, j)) {
+          return false;
+        }
+
+        // Check if the cell is already occupied
+        if (CanvasHelper.isCellOccupied(i, j, buildings)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+}

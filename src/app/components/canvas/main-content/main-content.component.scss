@@ -1,0 +1,14 @@
+.canvas-container {
+  position: relative;
+}
+
+.base-canvas,
+.overlay-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.overlay-canvas {
+  pointer-events: none; /* Allows mouse events to pass through */
+}

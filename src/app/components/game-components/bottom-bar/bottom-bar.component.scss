@@ -1,0 +1,27 @@
+.bottom-bar {
+  display: flex;
+  justify-content: space-around;
+  background-color: #f5f5f5;
+  padding: 1rem;
+}
+.construccion {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.construccion.selected {
+  outline: 3px solid yellow;
+}
+
+.building-cost {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}

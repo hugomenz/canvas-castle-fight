@@ -1,0 +1,16 @@
+<div class="bottom-bar">
+  @for( building of buildings; track building){
+  <div
+    class="construccion"
+    [style.background-color]="building.color"
+    (click)="onBuild(building.name)"
+    [class.selected]="(selectedBuilding$ | async) === building.name"
+  >
+    <div class="building-cost">
+      <div>{{ building.name }}</div>
+      <div>🌳: {{ building.cost.wood }}</div>
+      <div>💰: {{ building.cost.gold }}</div>
+    </div>
+  </div>
+  }
+</div>

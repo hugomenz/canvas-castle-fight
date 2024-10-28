@@ -1,0 +1,77 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden; /* Evita scroll en el contenedor principal */
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5; /* Fondo general */
+}
+
+.header {
+  width: 100%;
+  position: fixed;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.app-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 64px 0;
+
+  .sidebar {
+    width: 250px;
+    height: calc(100vh - 128px); /* Ajuste para header y footer */
+    background-color: #e1e5eb; /* Fondo del sidebar */
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .left-sidebar {
+    border-right: 2px solid #ccc;
+  }
+
+  .right-sidebar {
+    border-left: 2px solid #ccc;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    app-top-bar,
+    app-progress-bar {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      flex-grow: 1;
+      position: relative;
+      background-color: #fff; /* Fondo del contenido principal */
+      padding: 20px;
+      margin: 0 10px; /* Espacio entre los sidebars */
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    app-bottom-bar {
+      background-color: #f7f7f7;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      border: 1px solid red;
+    }
+  }
+}
+
+.footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}

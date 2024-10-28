@@ -1,0 +1,15 @@
+<div
+  class="canvas-container"
+  [style.width.px]="GameConstants.CANVAS_WIDTH"
+  [style.height.px]="GameConstants.CANVAS_HEIGHT"
+>
+  <app-base-canvas
+    [player1Buildings]="player1Buildings"
+    [player2Buildings]="player2Buildings"
+  ></app-base-canvas>
+
+  <app-overlay-canvas
+    [player1Buildings]="player1Buildings"
+    (cellClicked)="onCellClicked($event)"
+  ></app-overlay-canvas>
+</div>
