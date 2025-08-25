@@ -1,0 +1,57 @@
+<div class="tutorial-overlay" *ngIf="showTutorial && shouldShowTutorial()">
+  <div class="tutorial-modal">
+    <div class="tutorial-header">
+      <h3>{{ getCurrentStep().title }}</h3>
+      <div class="step-indicator">
+        Step {{ currentStep + 1 }} of {{ tutorialSteps.length }}
+      </div>
+    </div>
+    
+    <div class="tutorial-body">
+      <div class="tutorial-icon">{{ getCurrentStep().image }}</div>
+      <p>{{ getCurrentStep().content }}</p>
+    </div>
+    
+    <div class="tutorial-progress">
+      <div class="progress-bar">
+        <div 
+          class="progress-fill" 
+          [style.width.%]="((currentStep + 1) / tutorialSteps.length) * 100"
+        ></div>
+      </div>
+    </div>
+    
+    <div class="tutorial-footer">
+      <button 
+        class="btn btn-secondary" 
+        (click)="skipTutorial()"
+      >
+        Skip Tutorial
+      </button>
+      
+      <div class="tutorial-navigation">
+        <button 
+          class="btn btn-outline" 
+          (click)="previousStep()"
+          [disabled]="isFirstStep()"
+        >
+          Previous
+        </button>
+        
+        <button 
+          class="btn btn-primary" 
+          (click)="isLastStep() ? completeTutorial() : nextStep()"
+        >
+          {{ isLastStep() ? 'Start Playing' : 'Next' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Highlight overlay for specific elements -->
+  <div 
+    class="highlight-overlay" 
+    *ngIf="getCurrentStep().highlight"
+    [attr.data-highlight]="getCurrentStep().highlight"
+  ></div>
+</div>

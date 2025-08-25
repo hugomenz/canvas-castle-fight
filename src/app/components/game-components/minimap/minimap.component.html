@@ -1,0 +1,26 @@
+<div class="minimap-container">
+  <h4 class="minimap-title">Battlefield Overview</h4>
+  <div class="minimap-wrapper">
+    <canvas 
+      #minimapCanvas 
+      class="minimap-canvas"
+      (click)="onMinimapClick($event)"
+      [title]="'Click to navigate to location'"
+    ></canvas>
+    
+    <div class="minimap-legend">
+      <div class="legend-item">
+        <div class="legend-color player1"></div>
+        <span>Player 1</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color player2"></div>
+        <span>Player 2</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color castle"></div>
+        <span>Castles</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="unit-production-panel">
+  <h3 class="panel-title">Unit Production</h3>
+  
+  <div class="unit-types">
+    <div 
+      *ngFor="let unitType of unitTypes" 
+      class="unit-card"
+      [class.disabled]="!canAfford(unitType)"
+      (click)="produceUnit(unitType.name)"
+    >
+      <div class="unit-name">{{ unitType.name }}</div>
+      <div class="unit-stats">
+        <div class="stat">❤️ {{ unitType.health }}</div>
+        <div class="stat">⚔️ {{ unitType.attack }}</div>
+        <div class="stat">🛡️ {{ unitType.defense }}</div>
+        <div class="stat">🏃 {{ unitType.speed }}</div>
+        <div class="stat">🎯 {{ unitType.range }}</div>
+      </div>
+      <div class="unit-cost">
+        <div class="cost-item">🌳 {{ unitType.cost.wood }}</div>
+        <div class="cost-item">🍗 {{ unitType.cost.food }}</div>
+        <div class="cost-item">💰 {{ unitType.cost.gold }}</div>
+      </div>
+      <div class="production-time">⏱️ {{ unitType.productionTime }}s</div>
+      <div class="unit-description">{{ unitType.description }}</div>
+    </div>
+  </div>
+
+  <div class="production-queue" *ngIf="productionQueue.length > 0">
+    <h4>Production Queue</h4>
+    <div *ngFor="let item of productionQueue" class="queue-item">
+      <div class="queue-unit-name">{{ item.unitType }}</div>
+      <div class="progress-bar">
+        <div 
+          class="progress-fill" 
+          [style.width.%]="getProductionProgress(item)"
+        ></div>
+      </div>
+      <div class="time-remaining">{{ item.timeLeft.toFixed(1) }}s</div>
+    </div>
+  </div>
+</div>
