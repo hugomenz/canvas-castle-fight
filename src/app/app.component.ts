@@ -8,6 +8,7 @@ import { HeaderComponent } from './components/layout-elements/header/header.comp
 import { BottomBarComponent } from './components/game-components/bottom-bar/bottom-bar.component';
 import { ProgressBarComponent } from './components/game-components/progress-bar/progress-bar.component';
 import { TopBarComponent } from './components/game-components/top-bar/top-bar.component';
+import { TutorialComponent } from './components/game-components/tutorial/tutorial.component';
 
 @Component({
   selector: 'app-root',
@@ -22,10 +23,15 @@ import { TopBarComponent } from './components/game-components/top-bar/top-bar.co
     TopBarComponent,
     BottomBarComponent,
     ProgressBarComponent,
+    TutorialComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'canvaworld';
+
+  onTutorialClosed() {
+    console.log('Tutorial closed - ready to play!');
+  }
 }

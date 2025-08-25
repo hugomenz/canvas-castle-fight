@@ -18,7 +18,7 @@ export class GameStatsService {
   gameStats$ = this.gameStatsSource.asObservable();
 
   private gameStartTime = Date.now();
-  private gameTimer?: NodeJS.Timeout;
+  private gameTimer?: number;
 
   constructor() {
     this.startGameTimer();

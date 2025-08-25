@@ -1,0 +1,167 @@
+<div class="game-settings">
+  <h3 class="settings-title">Game Settings</h3>
+  
+  <!-- AI Settings -->
+  <div class="settings-section">
+    <h4>AI Opponent</h4>
+    <div class="setting-group">
+      <label class="form-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="aiEnabled" 
+          (change)="toggleAI()"
+        > Enable AI Opponent
+      </label>
+    </div>
+    
+    <div class="setting-group">
+      <label class="form-label">AI Difficulty:</label>
+      <select 
+        [(ngModel)]="aiDifficulty" 
+        (change)="changeAIDifficulty()"
+        class="form-control"
+      >
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+        <option value="expert">Expert</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Audio Settings -->
+  <div class="settings-section">
+    <h4>Audio</h4>
+    <div class="setting-group">
+      <label class="form-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="soundEnabled" 
+          (change)="onSettingChange()"
+        > Sound Effects
+      </label>
+    </div>
+    
+    <div class="setting-group">
+      <label class="form-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="musicEnabled" 
+          (change)="onSettingChange()"
+        > Background Music
+      </label>
+    </div>
+  </div>
+
+  <!-- Game Settings -->
+  <div class="settings-section">
+    <h4>Game Options</h4>
+    <div class="setting-group">
+      <label class="form-label">Game Speed:</label>
+      <select 
+        [(ngModel)]="gameSpeed" 
+        (change)="onSettingChange()"
+        class="form-control"
+      >
+        <option value="0.5">Slow (0.5x)</option>
+        <option value="1">Normal (1x)</option>
+        <option value="1.5">Fast (1.5x)</option>
+        <option value="2">Very Fast (2x)</option>
+      </select>
+    </div>
+    
+    <div class="setting-group">
+      <label class="form-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="showFPS" 
+          (change)="onSettingChange()"
+        > Show FPS
+      </label>
+    </div>
+    
+    <div class="setting-group">
+      <label class="form-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="showGrid" 
+          (change)="onSettingChange()"
+        > Show Grid
+      </label>
+    </div>
+  </div>
+
+  <!-- Save/Load -->
+  <div class="settings-section">
+    <h4>Save/Load Game</h4>
+    
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="saveGame()">
+        💾 Quick Save
+      </button>
+      <button class="btn btn-secondary" (click)="resetGame()">
+        🔄 Reset Game
+      </button>
+    </div>
+
+    <div class="setting-group">
+      <label class="form-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="autoSaveEnabled" 
+          (change)="onSettingChange()"
+        > Auto-save every
+      </label>
+      <select 
+        [(ngModel)]="autoSaveInterval" 
+        (change)="onSettingChange()"
+        class="form-control inline-select"
+        [disabled]="!autoSaveEnabled"
+      >
+        <option value="1">1 minute</option>
+        <option value="5">5 minutes</option>
+        <option value="10">10 minutes</option>
+        <option value="15">15 minutes</option>
+      </select>
+    </div>
+
+    <!-- Saved Games List -->
+    <div class="saved-games" *ngIf="savedGames.length > 0">
+      <h5>Saved Games</h5>
+      <div *ngFor="let save of savedGames" class="save-item">
+        <div class="save-info">
+          <div class="save-name">{{ save.name }}</div>
+          <div class="save-date">{{ save.timestamp | date:'short' }}</div>
+        </div>
+        <div class="save-actions">
+          <button class="btn btn-sm btn-success" (click)="loadGame(save.id)">
+            📁 Load
+          </button>
+          <button class="btn btn-sm btn-secondary" (click)="exportSave(save.id)">
+            📤 Export
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deleteSave(save.id)">
+            🗑️ Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Import Save -->
+    <div class="setting-group">
+      <label class="form-label">Import Save File:</label>
+      <input 
+        type="file" 
+        accept=".json" 
+        (change)="importSave($event)"
+        class="form-control"
+      >
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-danger" (click)="clearAllSaves()">
+        🗑️ Clear All Saves
+      </button>
+    </div>
+  </div>
+</div>
